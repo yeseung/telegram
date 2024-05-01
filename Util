@@ -1,29 +1,35 @@
 
-    public static String sendHttpRequest(String urlString) {
-        StringBuilder response = new StringBuilder();
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            
-            // POST 데이터를 보내지 않으므로 주석 처리합니다.
-            // connection.setDoOutput(true);
-            // connection.getOutputStream().write("name=" + od_name + "&phone=" + phone + "&order=" + od_items + "&message=" + str111 + "&price=" + od_total_price.getBytes("UTF-8"));
-            
-            // SSL 인증서 검증 비활성화
-            connection.getLastModified();
-            connection.setConnectTimeout(10000);
-            connection.setReadTimeout(10000);
-            
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
-            connection.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response.toString();
-    }
+public static boolean sendTelegram(String chatId, String text) {
+		
+		//Map<String, Object> map = new HashMap<>();
+		
+		StringBuilder response = new StringBuilder();
+		try {
+			URL url = new URL("https://api.telegram.org/bot{token}/sendMessage?chat_id=" + chatId + "&text=" + Util.getUrlEncoded(text));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+			
+			connection.getLastModified();
+			connection.setConnectTimeout(10000);
+			connection.setReadTimeout(10000);
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				response.append(line);
+			}
+			//map = new ObjectMapper().readValue(response.toString(), new TypeReference<Map<String, Object>>(){});
+			//System.out.println("response = " + map);
+			
+			reader.close();
+			connection.disconnect();
+			
+			return true;
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
