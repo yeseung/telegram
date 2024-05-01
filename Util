@@ -1,0 +1,29 @@
+
+    public static String sendHttpRequest(String urlString) {
+        StringBuilder response = new StringBuilder();
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            
+            // POST 데이터를 보내지 않으므로 주석 처리합니다.
+            // connection.setDoOutput(true);
+            // connection.getOutputStream().write("name=" + od_name + "&phone=" + phone + "&order=" + od_items + "&message=" + str111 + "&price=" + od_total_price.getBytes("UTF-8"));
+            
+            // SSL 인증서 검증 비활성화
+            connection.getLastModified();
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
+            
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response.toString();
+    }
